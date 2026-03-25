@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn AI</title>
+    <!-- Plus Jakarta Sans for a premium, clean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Font Awesome for sleek icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated background elements -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    
+    <div class="app-wrapper">
+        <header class="hero-header fade-in">
+            <div class="logo">
+                <div class="logo-icon-wrapper">
+                    <i class="fa-solid fa-brain logo-icon"></i>
+                </div>
+                <span>Churn<span class="text-gradient">Intelligence</span></span>
+            </div>
+            <p class="tagline">Predict and visualize customer retention using state-of-the-art AI.</p>
+        </header>
+
+        <main class="glass-panel slide-up" id="mainPanel">
+            <!-- Form Container -->
+            <form action="/predict" method="POST" id="predictForm" class="prediction-form">
+                <div class="form-grid">
+                    
+                    <div class="input-group">
+                        <label for="tenure"><i class="fa-solid fa-clock text-accent"></i> Tenure (Months)</label>
+                        <div class="control-wrapper">
+                            <input type="number" id="tenure" name="Tenure Months" min="0" max="72" placeholder="e.g. 12" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="monthly"><i class="fa-solid fa-file-invoice-dollar text-accent"></i> Monthly Charges</label>
+                        <div class="control-wrapper">
+                            <input type="number" step="0.01" id="monthly" name="Monthly Charges" min="0" max="200" placeholder="e.g. 70.00" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="total"><i class="fa-solid fa-sack-dollar text-accent"></i> Total Charges</label>
+                        <div class="control-wrapper">
+                            <input type="number" step="0.01" id="total" name="Total Charges" min="0" max="10000" placeholder="e.g. 2000.00" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gender"><i class="fa-solid fa-venus-mars text-accent"></i> Gender</label>
+                        <div class="select-wrapper">
+                            <select id="gender" name="Gender" required>
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down select-chevron"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="senior"><i class="fa-solid fa-person-cane text-accent"></i> Senior Citizen</label>
+                        <div class="select-wrapper">
+                            <select id="senior" name="Senior Citizen" required>
+                                <option value="" disabled selected>Select Option</option>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down select-chevron"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="internet"><i class="fa-solid fa-wifi text-accent"></i> Internet Service</label>
+                        <div class="select-wrapper">
+                            <select id="internet" name="Internet Service" required>
+                                <option value="" disabled selected>Select Service Type</option>
+                                <option value="DSL">DSL</option>
+                                <option value="Fiber optic">Fiber Optic</option>
+                                <option value="No">No Internet</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down select-chevron"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="contract"><i class="fa-solid fa-file-signature text-accent"></i> Contract</label>
+                        <div class="select-wrapper">
+                            <select id="contract" name="Contract" required>
+                                <option value="" disabled selected>Select Contract Term</option>
+                                <option value="Month-to-month">Month-to-month</option>
+                                <option value="One year">One year</option>
+                                <option value="Two year">Two year</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down select-chevron"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="payment"><i class="fa-solid fa-credit-card text-accent"></i> Payment Method</label>
+                        <div class="select-wrapper">
+                            <select id="payment" name="Payment Method" required>
+                                <option value="" disabled selected>Select Payment Method</option>
+                                <option value="Electronic check">Electronic Check</option>
+                                <option value="Mailed check">Mailed Check</option>
+                                <option value="Bank transfer (automatic)">Bank Transfer</option>
+                                <option value="Credit card (automatic)">Credit Card</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down select-chevron"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-predict" id="predictBtn">
+                        <span class="btn-text">Run Neural Analysis</span>
+                        <div class="btn-icon">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </button>
+                    <div class="error-notification" id="formError">Please fix the fields above before continuing.</div>
+                </div>
+            </form>
+            
+            <div id="loader" class="hidden loader-overlay">
+                <div class="loader-spinner">
+                    <svg viewBox="25 25 50 50">
+                        <circle cx="50" cy="50" r="20" fill="none" class="circle"></circle>
+                    </svg>
+                </div>
+                <p class="loader-text pulse-text">Analyzing user lifecycle patterns...</p>
+            </div>
+            
+        </main>
+        
+        <footer class="fade-in" style="animation-delay: 0.3s;">
+            <p>Built with Machine Learning &bull; Intelligent Churn Insights</p>
+        </footer>
+    </div>
+
+    <!-- We will use AJAX instead of submitting the form completely if JS is enabled -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Use main app script -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

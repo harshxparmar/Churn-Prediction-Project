@@ -1,0 +1,10 @@
+def demo():
+    print('I am from first demo')
+
+def demo(a):
+    print(a)
+    print('I am from second demo')
+
+def demo(a,b):
+    print(a,b)
+    print('I am from third demo')

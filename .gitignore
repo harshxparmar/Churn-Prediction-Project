@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Local configuration
+.env
+.vscode/
+.idea/
+
+# Ignore heavy data sets and zips (models, however, need to be uploaded)
+data/
+zips/
+*.pdf
+*.pptx

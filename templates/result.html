@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Churn Analysis Result</title>
+    <!-- We don't need this completely if using AJAX, but preserving it so direct POST works too -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="result-body">
+    <div class="bg-shapes">
+        <div class="shape shape-1" style="background: radial-gradient(circle, rgba(231,76,60,0.4) 0%, rgba(0,0,0,0) 70%);"></div>
+        <div class="shape shape-2" style="background: radial-gradient(circle, rgba(46,204,113,0.3) 0%, rgba(0,0,0,0) 70%);"></div>
+    </div>
+    
+    <div class="app-wrapper result-wrapper slide-up">
+        <div class="glass-panel result-panel text-center">
+            
+            <div class="result-header">
+                <h2>Analysis Complete</h2>
+                <div class="risk-badge {{ 'badge-high' if risk == 'High Risk' else ('badge-medium' if risk == 'Medium Risk' else 'badge-low') }}">
+                    <i class="fa-solid {{ 'fa-triangle-exclamation' if risk != 'Low Risk' else 'fa-shield-check' }}"></i>
+                    {{ risk }}
+                </div>
+            </div>
+
+            <div class="result-main">
+                <h1 class="{{ 'text-danger' if 'CHURN' in prediction else 'text-success' }} prediction-title">
+                    {{ prediction }}
+                </h1>
+                
+                <div class="chart-container-wrapper">
+                    <div class="chart-container">
+                        <canvas id="resultChart"></canvas>
+                    </div>
+                    <div class="prob-stat">
+                        <span class="prob-value">{{ probability }}%</span>
+                        <span class="prob-label">Churn Factor</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="suggestion-box {{ 'box-danger' if risk != 'Low Risk' else 'box-success' }}">
+                <div class="box-icon">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <div class="box-content">
+                    <h3>Strategic Recommendation</h3>
+                    <p>{{ suggestion }}</p>
+                </div>
+            </div>
+
+            <div class="form-actions mt-4 text-center">
+                <a href="/" class="btn-predict btn-secondary" style="display:inline-flex; width: auto; padding: 12px 30px;">
+                    <i class="fa-solid fa-rotate-left" style="margin-right: 10px;"></i>
+                    <span class="btn-text">New Analysis</span>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Hidden element for JS data extraction -->
+    <div id="resultData" data-prob="{{ probability }}" style="display:none;"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const prob = parseFloat(document.getElementById('resultData').dataset.prob);
+            
+            // Only trigger chart if canvas exists
+            const ctx = document.getElementById('resultChart');
+            if (ctx) {
+                const isHighRisk = prob >= 50;
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Churn Risk', 'Loyalty'],
+                        datasets: [{
+                            data: [prob, 100 - prob],
+                            backgroundColor: [
+                                isHighRisk ? '#ff4757' : '#2ed573',
+                                'rgba(255, 255, 255, 0.1)'
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        cutout: '75%',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                bodyFont: { family: "'Plus Jakarta Sans', sans-serif" },
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                padding: 12,
+                                cornerRadius: 8
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
